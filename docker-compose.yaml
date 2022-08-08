@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  database:
+    image: postgres:14.3-alpine
+    container_name: database
+    restart: always
+    volumes:
+      - ./dbdata:/var/lib/postgresql/data
+      - ./schema/init.sql:/docker-entrypoint-initdb.d/init.sql
+    env_file:
+      - ./config/database.env
+    ports:
+      - "5432:5432"
+
+  nats-streaming:
+    image: nats-streaming:0.24.6
+    container_name: nats_streaming
+    ports:
+     - "7070:7070"
+
+  order-service:
+    build: ./
+    command: ./bin/order-service
+    container_name: order_service
+    env_file:
+      - ./config/app.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+      - nats-streaming
+
+volumes:
+  dbdata: null
