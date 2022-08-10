@@ -1,11 +1,22 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/Gunga-D/taskL0/internal/services"
+	"github.com/gin-gonic/gin"
+)
 
-func getOrder(c *gin.Context) {
-
+func NewOrdersRoute(service *services.OrderService) *OrdersRoute {
+	return &OrdersRoute{service}
 }
 
-func addOrder(c *gin.Context) {
+type OrdersRoute struct {
+	service *services.OrderService
+}
 
+func (ordRoute *OrdersRoute) getOrder(c *gin.Context) {
+	//TODO
+}
+
+func (ordRoute *OrdersRoute) addOrder(c *gin.Context) {
+	//TODO
 }

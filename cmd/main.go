@@ -5,7 +5,9 @@ import (
 
 	"github.com/Gunga-D/taskL0/internal/app"
 	"github.com/Gunga-D/taskL0/internal/config"
+	"github.com/Gunga-D/taskL0/internal/repository/postgres"
 	"github.com/Gunga-D/taskL0/internal/routes"
+	"github.com/Gunga-D/taskL0/internal/services"
 )
 
 func main() {
@@ -20,7 +22,16 @@ func main() {
 		logrus.Fatalf(err.Error())
 	}
 
-	handler := routes.Init()
+	dbKernel, err := postgres.CreateKernel(dbConfig)
+	if err != nil {
+		logrus.Fatalf(err.Error())
+	}
+	ordersTable := postgres.NewPostgresOrdersTable(dbKernel)
+
+	ordersService := services.NewOrderService(ordersTable)
+
+	ordersRoute := routes.NewOrdersRoute(ordersService)
+	handler := routes.Init(ordersRoute)
 
 	server, err := app.New(appConfig, handler)
 	if err != nil {
