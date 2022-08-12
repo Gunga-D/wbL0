@@ -22,13 +22,19 @@ func (ordTab PostgresOrdersTable) CreateOrder(what models.Order) error {
 		return err
 	}
 
-	query := fmt.Sprintf("INSERT INTO orders (order_uid, data) VALUES ($1, $2)")
+	query := fmt.Sprintf("INSERT INTO orders (order_uid, order_data) VALUES ($1, $2)")
 	ordTab.kernel.QueryRow(query, what.OrderUID, normalizedOrder)
 
 	return nil
 }
 
 func (ordTab PostgresOrdersTable) GetOrder(key string) (models.Order, error) {
-	//TODO
-	return models.Order{}, nil
+	var result models.Order
+
+	query := fmt.Sprintf("SELECT order_data FROM orders WHERE order_uid = $1")
+	if err := ordTab.kernel.Get(&result, query, key); err != nil {
+		return models.Order{}, err
+	}
+
+	return result, nil
 }

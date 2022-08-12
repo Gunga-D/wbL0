@@ -1,4 +1,4 @@
 CREATE TABLE orders(
     order_uid VARCHAR UNIQUE NOT NULL PRIMARY KEY,
-    data JSON NOT NULL
+    order_data JSON NOT NULL
 );
