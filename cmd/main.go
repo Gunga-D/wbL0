@@ -8,6 +8,7 @@ import (
 	"github.com/Gunga-D/taskL0/internal/repository/postgres"
 	"github.com/Gunga-D/taskL0/internal/routes"
 	"github.com/Gunga-D/taskL0/internal/services"
+	"github.com/Gunga-D/taskL0/internal/storage"
 	"github.com/Gunga-D/taskL0/internal/stream"
 )
 
@@ -33,7 +34,12 @@ func main() {
 	}
 	ordersTable := postgres.NewPostgresOrdersTable(dbKernel)
 
-	ordersService := services.NewOrderService(ordersTable)
+	ordersCache := storage.NewOrdersMemory()
+	if err := ordersCache.Recover(&ordersTable); err != nil {
+		logrus.Fatalf(err.Error())
+	}
+
+	ordersService := services.NewOrderService(ordersCache, ordersTable)
 
 	ordersStream := stream.NewOrdersStream(ordersService)
 	if err := stream.Init(natStreamingConfig, ordersStream); err != nil {

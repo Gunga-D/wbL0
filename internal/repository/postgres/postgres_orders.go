@@ -39,3 +39,21 @@ func (ordTab PostgresOrdersTable) GetOrder(key string) (models.Order, error) {
 
 	return result, nil
 }
+
+func (ordTab PostgresOrdersTable) GetAll() ([]models.Order, error) {
+	var dbdata []json.RawMessage
+	if err := ordTab.kernel.Select(&dbdata, "SELECT order_data FROM orders"); err != nil {
+		return nil, err
+	}
+
+	var result []models.Order
+	for _, portion := range dbdata {
+		model := models.Order{}
+		if err := json.Unmarshal(portion, &model); err != nil {
+			return nil, err
+		}
+
+		result = append(result, model)
+	}
+	return result, nil
+}

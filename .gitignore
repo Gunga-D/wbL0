@@ -1,3 +1,6 @@
+# Database data
+dbdata/
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

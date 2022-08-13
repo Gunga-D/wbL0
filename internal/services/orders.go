@@ -6,13 +6,13 @@ import (
 	"github.com/Gunga-D/taskL0/internal/storage"
 )
 
-func NewOrderService(repos repository.OrdersTable) *OrderService {
-	return &OrderService{repos, storage.NewOrdersMemory()}
+func NewOrderService(cache storage.OrdersMemory, repos repository.OrdersTable) *OrderService {
+	return &OrderService{cache, repos}
 }
 
 type OrderService struct {
-	repos repository.OrdersTable
 	cache storage.OrdersMemory
+	repos repository.OrdersTable
 }
 
 func (ord *OrderService) CreateOrder(what models.Order) error {
