@@ -7,7 +7,7 @@ import (
 	"github.com/nats-io/stan.go"
 )
 
-func Init(config *config.NATStreamingConfig, ordStream *OrdersStream) error {
+func Create(config *config.NATStreamingConfig, ordStream *OrdersStream) error {
 	natsUrl := fmt.Sprintf("nats://%s:%s", config.Host, config.Port)
 	stream, err := stan.Connect(config.ClusterID, config.ClientID, stan.NatsURL(natsUrl), stan.MaxPubAcksInflight(1000))
 	if err != nil {

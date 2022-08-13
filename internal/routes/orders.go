@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"fmt"
+	"encoding/json"
 	"net/http"
 
 	"github.com/Gunga-D/taskL0/internal/models"
@@ -22,7 +22,6 @@ func (ordRoute *OrdersRoute) addOrder(c *gin.Context) {
 
 	err := c.BindJSON(&input)
 	if err != nil {
-		fmt.Println(err)
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
@@ -39,10 +38,29 @@ func (ordRoute *OrdersRoute) getOrder(c *gin.Context) {
 
 	result, err := ordRoute.service.GetOrder(id)
 	if err != nil {
-		fmt.Println(err)
 		c.AbortWithError(http.StatusNotFound, err)
 		return
 	}
 
 	c.JSON(http.StatusOK, result)
+}
+
+func (ordRoute *OrdersRoute) renderOrder(c *gin.Context) {
+	id := c.Param("id")
+
+	model, err := ordRoute.service.GetOrder(id)
+	if err != nil {
+		c.AbortWithError(http.StatusNotFound, err)
+		return
+	}
+
+	jsonModel, err := json.Marshal(model)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	data := gin.H{
+		"order": string(jsonModel),
+	}
+	c.HTML(http.StatusOK, "index.html", data)
 }

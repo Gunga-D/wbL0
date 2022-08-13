@@ -2,14 +2,27 @@ package routes
 
 import "github.com/gin-gonic/gin"
 
-func Init(ordRoute *OrdersRoute) *gin.Engine {
-	router := gin.New()
+func Create(ordRoute *OrdersRoute) *gin.Engine {
+	engine := gin.New()
 
-	api := router.Group("/orders")
+	engine.LoadHTMLGlob("./static/*.html")
+
+	api := engine.Group("/api")
 	{
-		api.POST("/", ordRoute.addOrder)
-		api.GET("/:id", ordRoute.getOrder)
+		orders := api.Group("/orders")
+		{
+			orders.POST("/", ordRoute.addOrder)
+			orders.GET("/:id", ordRoute.getOrder)
+		}
 	}
 
-	return router
+	view := engine.Group("/view")
+	{
+		orders := view.Group("/orders")
+		{
+			orders.GET("/:id", ordRoute.renderOrder)
+		}
+	}
+
+	return engine
 }

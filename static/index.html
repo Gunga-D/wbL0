@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Order view</title>
+    </head>
+    <body>
+        <h style = "font-size: 18px; font-weight: 600; text-align: center;">Desired order</h>
+        <div id = "order" style = "font-size: 14px; font-weight: 400;">
+        {{.order}}
+        </div>
+        <script>
+            let orderFrame = document.getElementById("order");
+            let orderObject = JSON.parse(orderFrame.innerText);
+            console.log(orderObject)
+            let normalizedOrder = JSON.stringify(orderObject, null, '\t')
+
+            orderFrame.innerText = normalizedOrder
+        </script>
+    </body>
+</html>

@@ -42,12 +42,12 @@ func main() {
 	ordersService := services.NewOrderService(ordersCache, ordersTable)
 
 	ordersStream := stream.NewOrdersStream(ordersService)
-	if err := stream.Init(natStreamingConfig, ordersStream); err != nil {
+	if err := stream.Create(natStreamingConfig, ordersStream); err != nil {
 		logrus.Fatalf(err.Error())
 	}
 
 	ordersRoute := routes.NewOrdersRoute(ordersService)
-	handler := routes.Init(ordersRoute)
+	handler := routes.Create(ordersRoute)
 
 	server, err := app.New(appConfig, handler)
 	if err != nil {
