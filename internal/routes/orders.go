@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/Gunga-D/taskL0/internal/models"
@@ -20,31 +20,29 @@ type OrdersRoute struct {
 func (ordRoute *OrdersRoute) addOrder(c *gin.Context) {
 	var input models.Order
 
-	if err := c.BindJSON(&input); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+	err := c.BindJSON(&input)
+	if err != nil {
+		fmt.Println(err)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
 	}
 	if err := ordRoute.service.CreateOrder(input); err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
 	}
 
 	c.Status(http.StatusOK)
 }
 
 func (ordRoute *OrdersRoute) getOrder(c *gin.Context) {
-	id, ok := c.Get("id")
-	if !ok {
-		c.AbortWithStatus(http.StatusBadRequest)
-	}
+	id := c.Param("id")
 
-	result, err := ordRoute.service.GetOrder(id.(string))
+	result, err := ordRoute.service.GetOrder(id)
 	if err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
+		fmt.Println(err)
+		c.AbortWithError(http.StatusNotFound, err)
+		return
 	}
 
-	normalizedResult, err := json.Marshal(result)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
-	}
-
-	c.JSON(http.StatusOK, normalizedResult)
+	c.JSON(http.StatusOK, result)
 }

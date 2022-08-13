@@ -5,16 +5,13 @@ import (
 
 	"github.com/Gunga-D/taskL0/internal/config"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 func CreateKernel(config *config.DBConfig) (*sqlx.DB, error) {
-	kernel, err := sqlx.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
-		"localhost", "5432", config.User, config.Database, config.Password, "disable"))
-	if err != nil {
-		return nil, err
-	}
-
-	err = kernel.Ping()
+	connectionInfo := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
+		config.Host, config.Port, config.User, config.DbName, config.Password, config.SSLMode)
+	kernel, err := sqlx.Connect("postgres", connectionInfo)
 	if err != nil {
 		return nil, err
 	}

@@ -7,7 +7,7 @@ func InitConfig(path, name string) (*viper.Viper, error) {
 
 	instance.AddConfigPath(path)
 	instance.SetConfigName(name)
-	instance.SetConfigType("env")
+	instance.SetConfigType("yaml")
 
 	instance.AutomaticEnv()
 	err := instance.ReadInConfig()
@@ -15,8 +15,8 @@ func InitConfig(path, name string) (*viper.Viper, error) {
 	return instance, err
 }
 
-func LoadAppConfig(path string) (*AppConfig, error) {
-	instance, err := InitConfig(path, "app")
+func LoadAppConfig(path string, name string) (*AppConfig, error) {
+	instance, err := InitConfig(path, name)
 	if err != nil {
 		return nil, err
 	}
@@ -26,8 +26,8 @@ func LoadAppConfig(path string) (*AppConfig, error) {
 	return &appConfig, err
 }
 
-func LoadDBConfig(path string) (*DBConfig, error) {
-	instance, err := InitConfig(path, "database")
+func LoadDBConfig(path string, name string) (*DBConfig, error) {
+	instance, err := InitConfig(path, name)
 	if err != nil {
 		return nil, err
 	}
@@ -35,4 +35,15 @@ func LoadDBConfig(path string) (*DBConfig, error) {
 	databaseConfig := DBConfig{}
 	err = instance.Unmarshal(&databaseConfig)
 	return &databaseConfig, err
+}
+
+func LoadNATStreamingConfig(path string, name string) (*NATStreamingConfig, error) {
+	instance, err := InitConfig(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	natStreamingConfig := NATStreamingConfig{}
+	err = instance.Unmarshal(&natStreamingConfig)
+	return &natStreamingConfig, err
 }

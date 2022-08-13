@@ -1,14 +1,19 @@
-FROM golang:1.18.3-alpine3.16
+FROM golang:1.18.3-buster
 
-RUN apk update && apk upgrade && \
-    apk --update add git make
+ENV GOPATH=/
 
-WORKDIR /app
+RUN apt-get update && apt-get install -y \
+    make \
+    build-essential \
+    postgresql-client
 
 COPY go.mod ./
 RUN go mod download
 
 COPY ./ ./
-RUN make builded-order-service
 
-CMD [ "./bin/order-service"]
+RUN chmod +x wait-for-postgres.sh
+
+RUN make ord-serv
+
+CMD ["./order-service"]

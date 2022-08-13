@@ -1,24 +1,18 @@
-test:
-	go test -v -cover -covermode=atomic ./...
-
-order-service:
+d-ord-serv:
 	go run ./cmd/main.go
 
-builded-order-service:
-	go build -o ./bin/order-service ./cmd/main.go
+t-ord-serv:
+	go run ./test/test_nats_streaming.go
+	
+ord-serv:
+	go build -o order-service ./cmd/main.go
 
-builded-server:
-	docker-compose build 
+serv: 
+	docker compose up -d --build
 
-launched-server:
-	docker-compose up -d
-
-stopped-server:
-	docker-compose stop
-	docker system prune
-
-paused-server:
+p-serv:
 	docker-compose down
 
-launched-builded-server: 
-	docker compose up -d --build
+clear-serv:
+	docker-compose stop
+	docker system prune

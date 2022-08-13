@@ -44,8 +44,8 @@ func (s *Server) Run() error {
 		Addr:           s.address,
 		Handler:        s.handler,
 		MaxHeaderBytes: 1 << 20,
-		ReadTimeout:    s.readTimeout,
-		WriteTimeout:   s.writeTimeout,
+		ReadTimeout:    s.readTimeout * time.Second,
+		WriteTimeout:   s.writeTimeout * time.Second,
 	}
 	return s.core.ListenAndServe()
 }

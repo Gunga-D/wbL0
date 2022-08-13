@@ -1,7 +1,10 @@
 package config
 
 type DBConfig struct {
-	Database string `mapstructure:"POSTGRES_DB"`
-	User     string `mapstructure:"POSTGRES_USER"`
-	Password string `mapstructure:"POSTGRES_PASSWORD"`
+	Host     string `mapstructure:"host"`
+	Port     string `mapstructure:"port"`
+	User     string `mapstructure:"user"`
+	Password string `mapstructure:"password"`
+	DbName   string `mapstructure:"dbname"`
+	SSLMode  string `mapstructure:"sslmode"`
 }

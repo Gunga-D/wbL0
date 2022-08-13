@@ -8,16 +8,21 @@ import (
 	"github.com/Gunga-D/taskL0/internal/repository/postgres"
 	"github.com/Gunga-D/taskL0/internal/routes"
 	"github.com/Gunga-D/taskL0/internal/services"
+	"github.com/Gunga-D/taskL0/internal/stream"
 )
 
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
-	appConfig, err := config.LoadAppConfig("./config")
+	appConfig, err := config.LoadAppConfig("./configs", "app_config")
 	if err != nil {
 		logrus.Fatalf(err.Error())
 	}
-	dbConfig, err := config.LoadDBConfig("./config")
+	dbConfig, err := config.LoadDBConfig("./configs", "db_config")
+	if err != nil {
+		logrus.Fatalf(err.Error())
+	}
+	natStreamingConfig, err := config.LoadNATStreamingConfig("./configs", "natstreaming_config")
 	if err != nil {
 		logrus.Fatalf(err.Error())
 	}
@@ -29,6 +34,11 @@ func main() {
 	ordersTable := postgres.NewPostgresOrdersTable(dbKernel)
 
 	ordersService := services.NewOrderService(ordersTable)
+
+	ordersStream := stream.NewOrdersStream(ordersService)
+	if err := stream.Init(natStreamingConfig, ordersStream); err != nil {
+		logrus.Fatalf(err.Error())
+	}
 
 	ordersRoute := routes.NewOrdersRoute(ordersService)
 	handler := routes.Init(ordersRoute)
