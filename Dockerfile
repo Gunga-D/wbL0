@@ -12,8 +12,6 @@ RUN go mod download
 
 COPY ./ ./
 
-RUN chmod +x wait-for-postgres.sh
-
 RUN make ord-serv
 
 CMD ["./order-service"]

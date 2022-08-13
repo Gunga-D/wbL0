@@ -28,10 +28,7 @@ func main() {
 		logrus.Fatalf(err.Error())
 	}
 
-	dbKernel, err := postgres.CreateKernel(dbConfig)
-	if err != nil {
-		logrus.Fatalf(err.Error())
-	}
+	dbKernel := postgres.CreateKernel(dbConfig)
 	ordersTable := postgres.NewPostgresOrdersTable(dbKernel)
 
 	ordersCache := storage.NewOrdersMemory()

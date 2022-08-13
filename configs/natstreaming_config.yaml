@@ -1,4 +1,4 @@
-host: "localhost"
+host: "nats-streaming"
 port: "4222"
 clusterid: "test-cluster"
 clientid: "client-123"

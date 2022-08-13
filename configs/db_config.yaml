@@ -1,4 +1,4 @@
-host: "localhost"
+host: "database"
 port: "5432"
 user: "myuser"
 password: "mypass"

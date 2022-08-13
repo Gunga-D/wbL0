@@ -20,7 +20,7 @@ services:
   
   order-service:
     build: ./
-    command: ./wait-for-postgres.sh database ./order-service
+    command: ./order-service
     container_name: order_service
     depends_on:
       - database
