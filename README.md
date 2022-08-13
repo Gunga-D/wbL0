@@ -4,7 +4,7 @@ The main functions that the application performs:
 - data storage
 - providing the access for data in various ways
 
-So the service allows to work with data by http requests and message queue
+So the service allows to work with data by http requests and message queue.
 
 ### Details
 
